@@ -10,6 +10,26 @@ from clyngor.decoder import decode
 from clyngor.upapi import converted_types, converted_types_or_symbols
 from clyngor.propagators import Propagator, Variable, Main, Constraint
 
+import subprocess
+import traceback
+import sys
+from shutil import which
+
+def check_clingo():
+    if which('clingo'):
+        # Check if clingo is accessible.
+        clingo_cmds = ['clingo', '--version']
+        try:
+            subprocess.call(clingo_cmds, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        except:
+            print('Error with clingo:')
+            print(traceback.format_exc())
+            sys.exit(1)
+    else:
+        print('clingo is not in the Path, clyngor can not work without it.')
+        sys.exit(1)
+
+check_clingo()
 
 def load_clingo_module() -> bool:
     try:
